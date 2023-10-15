@@ -1,8 +1,8 @@
 use std::fs::OpenOptions;
 use std::io::{self, BufRead, BufReader, Write};
 
-pub fn process_input_file(folder_path: &str) -> Result<String, io::Error> {
-    let input_file_path = format!("{}/branch_weekly_sales.txt", folder_path);
+pub fn process_input_file(branch_number: i32) -> Result<String, io::Error> {
+    let input_file_path = format!("sales_summary/data/branch{}/branch_weekly_sales.txt", branch_number);
     let file = match std::fs::File::open(&input_file_path) {
         Ok(file) => file,
         Err(e) => return Err(io::Error::new(io::ErrorKind::Other, format!("Failed to open file: {}", e))),
@@ -23,13 +23,13 @@ pub fn process_input_file(folder_path: &str) -> Result<String, io::Error> {
         }
     }
     
-    let output_str = format!("{}, PROD001, {}", folder_path, total_sales);
+    let output_str = format!("branch{}, PROD001, {}", branch_number, total_sales);
     write_to_summary_file(&output_str)?;
     Ok("OK".to_string())
 }
 
 pub fn write_to_summary_file(output_str: &str) -> Result<(), io::Error> {
-    let output_file_path = "/sales_summary/data/weekly_summary/weekly_sales_summary.txt";
+    let output_file_path = "sales_summary/data/weekly_summary/weekly_sales_summary.txt";
     let mut file = OpenOptions::new()
         .write(true)
         .append(true)
